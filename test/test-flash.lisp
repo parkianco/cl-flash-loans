@@ -266,9 +266,10 @@
   (cl-flash-loans:clear-flash-registries)
 
   (let* ((called nil)
+         (amount (expt 10 18))
          (response (cl-flash-loans:execute-flash-loan-simple
                     '("0xTOKEN")
-                    '(1000000)
+                    (list amount)
                     :initiator "0xBORROWER"
                     :callback-fn (lambda (assets amounts premiums params)
                                    (declare (ignore assets amounts premiums params))
@@ -278,20 +279,21 @@
     (assert-true (cl-flash-loans:flash-loan-response-success response))
     (assert-equal '("0xTOKEN")
                   (cl-flash-loans:flash-loan-response-assets-borrowed response))
-    (assert-equal '(1000000)
+    (assert-equal (list amount)
                   (cl-flash-loans:flash-loan-response-amounts-borrowed response))))
 
 (deftest test-execute-flash-loan-with-pool
   "Test flash loan with pool."
   (cl-flash-loans:clear-flash-registries)
 
-  (let ((pool (cl-flash-loans:create-flash-pool :name "Test Pool")))
-    (cl-flash-loans:add-pool-asset pool "0xTOKEN" :liquidity 10000000)
+  (let* ((amount (expt 10 18))
+         (pool (cl-flash-loans:create-flash-pool :name "Test Pool")))
+    (cl-flash-loans:add-pool-asset pool "0xTOKEN" :liquidity (* 10 amount))
 
     (let ((request (cl-flash-loans:make-flash-loan-request
                     :initiator "0xBORROWER"
                     :assets '("0xTOKEN")
-                    :amounts '(1000000))))
+                    :amounts (list amount))))
       (let ((response (cl-flash-loans:execute-flash-loan
                        request
                        :pool pool
@@ -309,7 +311,7 @@
 
   (let ((response (cl-flash-loans:execute-flash-loan-simple
                    '("0xTOKEN")
-                   '(1000000)
+                   (list (expt 10 18))
                    :initiator "0xBORROWER"
                    :callback-fn (lambda (assets amounts premiums params)
                                   (declare (ignore assets amounts premiums params))
@@ -322,7 +324,7 @@
   (let ((request (cl-flash-loans:make-flash-loan-request
                   :initiator "0xBORROWER"
                   :assets '("0xA" "0xB")
-                  :amounts '(1000 2000))))
+                  :amounts (list (expt 10 18) (* 2 (expt 10 18))))))
     (let ((response (cl-flash-loans:simulate-flash-loan request)))
       (assert-true (cl-flash-loans:flash-loan-response-success response))
       (assert-equal 2 (length (cl-flash-loans:flash-loan-response-assets-borrowed response)))
