@@ -56,4 +56,6 @@ fee calculation, and security protections without external dependencies."
     :components
     ((:file "test-flash"))))
   :perform (test-op (op c)
-             (symbol-call :cl-flash-loans.test :run-tests)))
+             (let ((result (symbol-call :cl-flash-loans.test :run-tests)))
+               (unless result
+                 (error "Tests failed")))))
