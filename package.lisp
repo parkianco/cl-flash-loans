@@ -391,12 +391,15 @@
    #:add-pool-asset
    #:remove-pool-asset
    #:get-pool-liquidity
+   #:add-liquidity
+   #:remove-liquidity
    #:pause-flash-pool
    #:unpause-flash-pool
 
    ;; Callback Operations
    #:register-callback
    #:unregister-callback
+   #:get-callback
    #:execute-callback
    #:validate-callback-params
 
