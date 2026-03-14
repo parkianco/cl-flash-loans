@@ -1,3 +1,6 @@
+;; Copyright (c) 2024-2026 Parkian Company LLC. All rights reserved.
+;; SPDX-License-Identifier: BSD-3-Clause
+
 ;;;; ============================================================================
 ;;;; CL-FLASH-LOANS - Atomic Flash Loan Protocol for Common Lisp
 ;;;; ============================================================================
@@ -18,9 +21,9 @@
 ;;;; License: MIT
 ;;;; ============================================================================
 
-(defsystem "cl-flash-loans"
+(asdf:defsystem #:"cl-flash-loans"
   :name "CL-FLASH-LOANS"
-  :version "1.0.0"
+  :version "0.1.0"
   :author "Parkian Company LLC"
   :license "MIT"
   :description "Atomic flash loan protocol for Common Lisp"
@@ -42,11 +45,11 @@ fee calculation, and security protections without external dependencies."
      (:file "callback")
      (:file "pool"))))
 
-  :in-order-to ((test-op (test-op "cl-flash-loans/test"))))
+  :in-order-to ((asdf:test-op (test-op "cl-flash-loans/test"))))
 
-(defsystem "cl-flash-loans/test"
+(asdf:defsystem #:"cl-flash-loans/test"
   :name "CL-FLASH-LOANS Tests"
-  :version "1.0.0"
+  :version "0.1.0"
   :author "Parkian Company LLC"
   :license "MIT"
   :description "Test suite for cl-flash-loans"
@@ -55,7 +58,7 @@ fee calculation, and security protections without external dependencies."
   ((:module "test"
     :components
     ((:file "test-flash"))))
-  :perform (test-op (op c)
-             (let ((result (symbol-call :cl-flash-loans.test :run-tests)))
+  :perform (asdf:test-op (op c)
+             (let ((result (uiop:symbol-call :cl-flash-loans.test :run-tests)))
                (unless result
                  (error "Tests failed")))))
